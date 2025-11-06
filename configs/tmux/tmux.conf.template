@@ -1,0 +1,99 @@
+# Terminal settings
+set -g default-terminal "tmux-256color"
+set -g default-shell "@FISH@"
+
+# Basic settings
+set -g history-limit 10000
+set -g base-index 1
+set -g pane-base-index 1
+set -g renumber-windows on
+set -g mouse on
+set -g set-clipboard on
+set -g escape-time 0
+set -g display-time 2000
+set -g display-panes-time 2000
+set -g clock-mode-style 24
+
+# Key bindings
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# Window/pane management
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+
+# Vi-style navigation
+setw -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Resize panes
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# Window navigation
+bind -r C-h select-window -t :-
+bind -r C-l select-window -t :+
+bind Space last-window
+bind w choose-window
+bind n next-window
+bind p previous-window
+
+# Copy mode
+bind Enter copy-mode
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
+
+# Session management
+bind S choose-session
+bind N new-session
+
+# Other bindings
+bind r source-file @TMUX_CONF@ \; display "Configuration reloaded!"
+bind s setw synchronize-panes
+bind C-k clear-history
+
+# Activity monitoring
+setw -g monitor-activity on
+set -g visual-activity off
+
+# Terminal overrides
+set -ga terminal-overrides ",xterm-256color*:Tc"
+set -ga terminal-overrides ",alacritty:Tc"
+
+# Focus events
+set -g focus-events on
+
+# Aggressive resize
+setw -g aggressive-resize on
+
+# Bell
+set -g bell-action none
+set -g visual-bell off
+
+# Status bar
+set -g status-interval 5
+set -g status-position bottom
+
+# Colors (Tokyo Night theme)
+set -g status-style "bg=#1a1b26,fg=#c0caf5"
+set -g status-left-style "bg=#7aa2f7,fg=#1a1b26"
+set -g status-right-style "bg=#7aa2f7,fg=#1a1b26"
+set -g window-status-current-style "bg=#7aa2f7,fg=#1a1b26"
+set -g pane-border-style "fg=#414868"
+set -g pane-active-border-style "fg=#7aa2f7"
+set -g message-style "fg=#1a1b26,bg=#e0af68"
+
+# Don't rename windows automatically
+set -g allow-rename off
+
+# Plugin settings (we'll handle these manually or remove them)
+# For resurrect/continuum functionality, you might want to use tmux-resurrect manually
+# or create wrapper scripts for session management
