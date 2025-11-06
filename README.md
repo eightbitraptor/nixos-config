@@ -19,9 +19,12 @@ nixos-config/
 ├── flake.nix                 # Main flake configuration
 ├── flake.lock               # Locked dependencies (auto-generated)
 ├── hosts/
-│   └── fern/
-│       ├── configuration.nix # System-level configuration
-│       └── hardware.nix     # Hardware-specific configuration
+│   ├── fern/
+│   │   ├── configuration.nix # System-level configuration
+│   │   └── hardware.nix     # Hardware-specific configuration
+│   └── container/
+│       ├── configuration.nix # Container test configuration
+│       └── hardware.nix     # Container hardware stub
 ├── home/
 │   └── matt/
 │       ├── home.nix         # Main home-manager configuration
@@ -30,65 +33,228 @@ nixos-config/
 │       ├── dev.nix          # Development tools
 │       ├── terminal.nix     # Alacritty and tmux
 │       └── editors.nix      # Vim configuration
-└── overlays/
-    └── swayfx.nix          # SwayFX package overlay
+├── overlays/
+│   └── swayfx.nix          # SwayFX package overlay
+├── scripts/                 # Test environment scripts
+├── Containerfile           # Container definition for testing
+└── docker-compose.yml      # Container orchestration
 ```
 
 ## Installation
 
-### Prerequisites
+### Installing on a Fresh NixOS System (ThinkPad or Similar)
 
-1. Boot into a NixOS installer ISO
-2. Partition and format your disk as desired
-3. Mount your partitions (root to `/mnt`, boot to `/mnt/boot`, etc.)
+These instructions assume you've just installed NixOS using the minimal installer and have a working network connection.
 
-### Generate Hardware Configuration
+#### Step 1: Enable Flakes and Install Git
 
-After mounting your partitions, generate the hardware configuration:
+After booting into your fresh NixOS installation, you need to enable flakes and install git:
 
 ```bash
-nixos-generate-config --root /mnt --show-hardware-config > hardware-config.nix
+# Temporarily enable flakes for this session
+nix-shell -p git --experimental-features 'nix-command flakes'
+
+# Or if you want to enable flakes permanently first (recommended)
+sudo nano /etc/nixos/configuration.nix
+# Add this line inside the configuration:
+#   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+# Save and exit, then:
+sudo nixos-rebuild switch
+sudo nix-channel --update
+nix-shell -p git
 ```
 
-Copy the generated configuration to this repository, replacing the placeholder `hardware.nix`:
+#### Step 2: Clone This Repository
 
 ```bash
-cp hardware-config.nix /path/to/nixos-config/hosts/fern/hardware.nix
+# Clone to a temporary location first
+cd /tmp
+git clone https://github.com/yourusername/nixos-config.git
+cd nixos-config
 ```
 
-### Installation Steps
+#### Step 3: Prepare Your Hardware Configuration
 
-1. Clone your dotfiles repository to the mounted system:
+The repository includes a configuration for a system called "fern". You'll need to adapt this for your ThinkPad:
+
 ```bash
-mkdir -p /mnt/home/matt/git
-cd /mnt/home/matt/git
-git clone <your-dotfiles-repo> dotfiles
-cd dotfiles/nixos-config
+# Option A: Use 'fern' configuration directly (if your hostname will be 'fern')
+sudo cp /etc/nixos/hardware-configuration.nix hosts/fern/hardware.nix
+
+# Option B: Create a new host configuration for your machine
+# (Replace 'mythinkpad' with your desired hostname)
+cp -r hosts/fern hosts/mythinkpad
+sudo cp /etc/nixos/hardware-configuration.nix hosts/mythinkpad/hardware.nix
 ```
 
-2. Update the hardware configuration with your actual disk UUIDs (from the generated config)
+#### Step 4: Customize the Configuration
 
-3. Update user-specific settings in `home/matt/home.nix`:
-   - Git user name and email
-   - SSH configuration
-   - Any personal preferences
+Edit the configuration to match your system:
 
-4. Enable flakes for the installer:
 ```bash
-nix-shell -p nixFlakes
+# If using fern configuration
+nano hosts/fern/configuration.nix
+
+# Or if you created a new host
+nano hosts/mythinkpad/configuration.nix
 ```
 
-5. Install NixOS:
+Key things to verify/modify:
+- **Hostname**: Change `networking.hostName` to your desired hostname
+- **Timezone**: Adjust `time.timeZone` if not in Europe/London
+- **User**: The configuration assumes username "matt" - change if needed
+- **Boot Loader**: Verify the bootloader configuration matches your setup (UEFI vs Legacy)
+
+**IMPORTANT**: The hardware.nix you copied from `/etc/nixos/hardware-configuration.nix` already contains your correct filesystem configuration. However, you should verify it:
+
 ```bash
-nixos-install --flake .#fern
+# Check your current partition setup
+lsblk -f
+# Compare with what's in the hardware.nix file
+cat hosts/fern/hardware.nix
 ```
 
-6. Set the root password when prompted
+#### Step 5: Add New Host to Flake (if you created a new host)
 
-7. Reboot into your new NixOS system:
+If you created a new host configuration, add it to `flake.nix`:
+
 ```bash
-reboot
+nano flake.nix
 ```
+
+Add your new host configuration after the 'fern' entry:
+```nix
+mythinkpad = nixpkgs.lib.nixosSystem {
+  inherit system pkgs;
+  modules = [
+    ./hosts/mythinkpad/hardware.nix
+    ./hosts/mythinkpad/configuration.nix
+    ./modules/user-environment.nix
+    ./users/matt
+  ];
+  specialArgs = { inherit inputs; };
+};
+```
+
+#### Step 6: Test the Configuration
+
+Before switching, test that the configuration builds:
+
+```bash
+# For fern configuration
+sudo nixos-rebuild test --flake .#fern
+
+# Or for your custom host
+sudo nixos-rebuild test --flake .#mythinkpad
+```
+
+This will build and activate the configuration temporarily (until reboot) without making it the default.
+
+#### Step 7: Switch to the New Configuration
+
+If the test succeeds and everything works:
+
+```bash
+# Make the configuration permanent
+sudo nixos-rebuild switch --flake .#fern
+# Or: sudo nixos-rebuild switch --flake .#mythinkpad
+
+# Move the configuration to /etc/nixos for easy access
+sudo rm -rf /etc/nixos/*
+sudo cp -r . /etc/nixos/
+cd /etc/nixos
+```
+
+#### Step 8: Set Up User Password
+
+If you're using the 'matt' user from the configuration:
+
+```bash
+# Set password for the matt user
+sudo passwd matt
+```
+
+#### Step 9: Reboot
+
+```bash
+sudo reboot
+```
+
+After reboot, you should have a fully configured system with:
+- SwayFX window manager (if on the fern configuration)
+- Fish shell
+- All development tools
+- Your personalized environment
+
+### Troubleshooting
+
+#### If the build fails:
+1. Check the error message - it usually indicates which package or option is problematic
+2. Run with `--show-trace` for more details:
+   ```bash
+   sudo nixos-rebuild test --flake .#fern --show-trace
+   ```
+
+#### If you can't boot after switching:
+1. NixOS keeps previous configurations. At the boot menu, select an older generation
+2. Once booted into a working configuration, you can rollback:
+   ```bash
+   sudo nixos-rebuild switch --rollback
+   ```
+
+#### Common Issues:
+- **"No such file or directory"**: Make sure all files referenced in imports exist
+- **"undefined variable"**: A package name might have changed in nixpkgs
+- **"option does not exist"**: The NixOS option might have been renamed or removed
+- **Architecture mismatch**: Ensure the `system` in flake.nix matches your hardware (x86_64-linux for Intel, aarch64-linux for ARM)
+
+### Post-Installation
+
+After successful installation:
+
+1. **Set up Git credentials:**
+   ```bash
+   git config --global user.name "Your Name"
+   git config --global user.email "your.email@example.com"
+   ```
+
+2. **Generate SSH keys:**
+   ```bash
+   ssh-keygen -t ed25519 -C "your.email@example.com"
+   ```
+
+3. **Fork and track your configuration:**
+   ```bash
+   # Fork this repository on GitHub first, then:
+   cd /etc/nixos
+   git remote set-url origin https://github.com/yourusername/your-nixos-config.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+4. **Commit your hardware configuration:**
+   ```bash
+   cd /etc/nixos
+   git add hosts/
+   git commit -m "Add my ThinkPad hardware configuration"
+   git push
+   ```
+
+## Testing
+
+Test your NixOS configuration changes before deploying:
+
+```bash
+./test.sh
+```
+
+This validates:
+- Flake syntax and structure
+- NixOS configuration evaluation
+- Package availability
+- Module compatibility
+
+For detailed documentation, see [docs/TESTING.md](docs/TESTING.md).
 
 ## Post-Installation
 

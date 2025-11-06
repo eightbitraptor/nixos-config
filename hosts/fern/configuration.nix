@@ -20,7 +20,6 @@
   };
 
   console = {
-    font = "Lat2-Terminus16";
     useXkbConfig = true;
   };
 
@@ -46,15 +45,21 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  users.users.matt = {
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "gb";
+    variant = "";
+    options = "ctrl:nocaps";
+  };
+
+  users.users.mattvh = {
     isNormalUser = true;
-    description = "Matt";
+    description = "Matt Valentine-House";
     extraGroups = [
       "wheel"
       "networkmanager"
       "audio"
       "video"
-      "seat"
       "input"
       "docker"
     ];
@@ -65,7 +70,6 @@
   programs.fish.enable = true;  # System-wide fish support
   environment.shells = [ pkgs.fish ];
 
-  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -75,11 +79,6 @@
   };
 
   hardware.pulseaudio.enable = false;
-
-  services.seatd = {
-    enable = true;
-    group = "seat";
-  };
 
   security.polkit.enable = true;
 
@@ -136,36 +135,32 @@
     unzip
     zip
 
-    gcc
     gnumake
     pkg-config
     openssl
 
-    alacritty
+    kitty
     tmux
     fzf
     ripgrep
     fd
     bat
-    eza
-    direnv
+    # direnv - configured via home-manager
 
     lm_sensors
     acpi
     powertop
 
-    networkmanagerapplet
-
     imagemagick
     ffmpeg
 
-    jetbrains-mono
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    font-awesome
-    cascadia-code
+    pkgs.jetbrains-mono
+    (pkgs.nerd-fonts.jetbrains-mono)
+    pkgs.noto-fonts
+    pkgs.noto-fonts-cjk-sans
+    pkgs.noto-fonts-color-emoji
+    pkgs.font-awesome
+    pkgs.cascadia-code
 
     python3
     python3Packages.pip
@@ -177,10 +172,10 @@
     enableDefaultPackages = true;
     packages = with pkgs; [
       jetbrains-mono
-      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      (nerd-fonts.jetbrains-mono)
       noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
       font-awesome
       cascadia-code
     ];

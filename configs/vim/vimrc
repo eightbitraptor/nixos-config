@@ -1,277 +1,216 @@
-" Basic Settings
-syntax enable
-filetype plugin indent on
-set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=utf-8
-set bomb
-set binary
-set backspace=indent,eol,start
+"let $PATH = system("printenv PATH")
+"let $PATH = substitute($PATH, "\<C-J>$", "", "")
 
-" Editor Settings
-set tabstop=2
-set shiftwidth=2
-set expandtab
-set number
-set relativenumber
-set hidden
-set ignorecase
-set smartcase
-set mouse=a
-set background=dark
+call plug#begin('~/.vim/plugged')
 
-" UI Settings
-set ruler
-set cmdheight=2
-set laststatus=2
-set showcmd
-set showmode
-set showmatch
-set wildmenu
-set wildmode=list:longest,full
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
-set colorcolumn=81
-set cursorline
-set list
-set listchars=tab:▸\ ,trail:·,extends:>,precedes:<,nbsp:␣
+" Make buffers work better
+Plug 'vim-scripts/bufkill.vim'
+Plug 'vim-scripts/scratch.vim'
 
-" Search Settings
-set hlsearch
-set incsearch
-set wrapscan
+" Git
+Plug 'tpope/vim-fugitive'
 
-" Indentation
-set autoindent
-set smartindent
-set cindent
+" Project navigation
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/vim-fern-renderer-nerdfont'
 
-" Folding
-set foldmethod=indent
-set foldlevel=99
-set nofoldenable
-
-" Performance
-set lazyredraw
-set ttyfast
-set synmaxcol=500
-
-" Backup and Swap
-set nobackup
-set nowritebackup
-set noswapfile
-
-" Splits
-set splitbelow
-set splitright
-
-" Completion
-set completeopt=menuone,noselect,preview
-set pumheight=10
-
-" Timeout
-set timeoutlen=500
-set ttimeoutlen=0
-
-" Update time for plugins
-set updatetime=300
-
-" Sign column
-set signcolumn=yes
-
-" === Key Mappings ===
-
-" Leader key
-let mapleader = ","
-let g:mapleader = ","
-
-" Quick save
-nmap <leader>w :w!<cr>
-
-" Quick quit
-nmap <leader>q :q<cr>
-nmap <leader>Q :qa!<cr>
-
-" Buffer navigation
-nnoremap <leader>bn :bnext<CR>
-nnoremap <leader>bp :bprevious<CR>
-nnoremap <leader>bd :bd<CR>
-nnoremap <leader>bf :bfirst<CR>
-nnoremap <leader>bl :blast<CR>
-
-" Window navigation
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-
-" Window resizing
-nnoremap <leader>+ :resize +5<CR>
-nnoremap <leader>- :resize -5<CR>
-nnoremap <leader>> :vertical resize +5<CR>
-nnoremap <leader>< :vertical resize -5<CR>
-
-" Tab navigation
-nnoremap <leader>tn :tabnew<CR>
-nnoremap <leader>to :tabonly<CR>
-nnoremap <leader>tc :tabclose<CR>
-nnoremap <leader>tm :tabmove<CR>
-nnoremap <leader>t<leader> :tabnext<CR>
-nnoremap <leader>th :tabprevious<CR>
-
-" Clear search highlight
-nnoremap <silent> <leader><space> :nohl<CR>
-
-" Toggle paste mode
-set pastetoggle=<F2>
-
-" Visual mode indenting
-vnoremap < <gv
-vnoremap > >gv
-
-" Move lines up/down
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
-
-" Copy to system clipboard
-vnoremap <leader>y "+y
-nnoremap <leader>Y "+yg_
-nnoremap <leader>y "+y
-
-" Paste from system clipboard
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
-
-" === Plugin Configuration ===
-
-" FZF configuration
-nnoremap <C-p> :Files<CR>
-nnoremap <leader>f :Files<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>g :Rg<CR>
-nnoremap <leader>t :Tags<CR>
-nnoremap <leader>m :Marks<CR>
-nnoremap <leader>h :History<CR>
-
-let g:fzf_layout = { 'down': '~40%' }
-
-" Fern file explorer
-nnoremap <leader>e :Fern . -drawer -toggle<CR>
-let g:fern#drawer_width = 30
-let g:fern#default_hidden = 1
-let g:fern#default_exclude = '\.git$'
-
-" Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme = 'tokyonight'
-
-" Fugitive
-nnoremap <leader>gs :Git<CR>
-nnoremap <leader>gd :Gdiffsplit<CR>
-nnoremap <leader>gc :Git commit<CR>
-nnoremap <leader>gb :Git blame<CR>
-nnoremap <leader>gl :Git log<CR>
-nnoremap <leader>gp :Git push<CR>
-nnoremap <leader>gr :Git pull --rebase<CR>
-
-" Commentary
-nmap <leader>/ gcc
-vmap <leader>/ gc
-
-" Tabular
-nmap <leader>a= :Tabularize /=<CR>
-vmap <leader>a= :Tabularize /=<CR>
-nmap <leader>a: :Tabularize /:\zs<CR>
-vmap <leader>a: :Tabularize /:\zs<CR>
-nmap <leader>a, :Tabularize /,<CR>
-vmap <leader>a, :Tabularize /,<CR>
-
-" Tagbar
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_autofocus = 1
-let g:tagbar_autoclose = 1
-let g:tagbar_compact = 1
-
-" Rust
-let g:rustfmt_autosave = 1
-let g:rust_clip_command = 'wl-copy'
+" Code utils
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
+Plug 'godlygeek/tabular'
+Plug 'preservim/tagbar'
+Plug 'tpope/vim-vinegar'
+Plug 'bfrg/vim-cpp-modern'
+Plug 'vim-scripts/VimCompletesMe'
+Plug 'ntpeters/vim-better-whitespace'
 
 " Ruby/Rails
-let g:rails_projections = {
-  \ "app/controllers/*_controller.rb": {
-  \   "command": "controller",
-  \   "test": "spec/controllers/{}_controller_spec.rb"
-  \ },
-  \ "app/models/*.rb": {
-  \   "command": "model",
-  \   "test": "spec/models/{}_spec.rb"
-  \ }}
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rbenv'
+Plug 'tpope/vim-rails'
 
-" === Auto Commands ===
+" Rust
+Plug 'wting/rust.vim'
+Plug 'racer-rust/vim-racer'
 
-" Remove trailing whitespace on save
-autocmd BufWritePre * %s/\s\+$//e
+" Theme & Appearance
+Plug 'lambdalisue/nerdfont.vim'
+Plug 'vim-airline/vim-airline'
+let g:airline_extensions = ['branch', 'fzf']
 
-" Return to last edit position
-autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal! g`\"" |
-  \ endif
+call plug#end()
 
-" File type specific settings
-autocmd FileType python setlocal tabstop=4 shiftwidth=4
-autocmd FileType go setlocal tabstop=4 shiftwidth=4 noexpandtab
-autocmd FileType make setlocal noexpandtab
-autocmd FileType yaml setlocal tabstop=2 shiftwidth=2
-autocmd FileType json setlocal tabstop=2 shiftwidth=2
-autocmd FileType markdown setlocal spell spelllang=en_gb
-autocmd FileType gitcommit setlocal spell spelllang=en_gb
+filetype on
+filetype plugin on
+filetype indent on
+set nocompatible
+let skip_defaults_vim=1
+set viminfo=
+set synmaxcol=300
+set ttyfast
+set lazyredraw
 
-" Highlight yanked text
-augroup highlight_yank
-  autocmd!
-  autocmd TextYankPost * silent! lua vim.highlight.on_yank()
-augroup END
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
-" === Custom Functions ===
-
-" Toggle between number and relativenumber
-function! ToggleNumber()
-  if(&relativenumber == 1)
-    set norelativenumber
-    set number
-  else
-    set relativenumber
-  endif
-endfunc
-nnoremap <leader>n :call ToggleNumber()<CR>
-
-" Strip trailing whitespace
-function! StripTrailingWhitespace()
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  %s/\s\+$//e
-  let @/=_s
-  call cursor(l, c)
-endfunction
-nnoremap <leader>ss :call StripTrailingWhitespace()<CR>
-
-" === Color Scheme ===
-
-" Enable true color support
-if has('termguicolors')
+" Apple Terminal doesn't support truecolour, so setting termguicolors messes
+" it up big style
+if !$TERM_PROGRAM == "Apple_Terminal"
   set termguicolors
 endif
 
-" Try to load color scheme
-try
-  colorscheme tokyonight-night
-catch
-  colorscheme desert
-endtry
+" Fedora sets cscopetag by default, which changes the behaviour of Ctrl-] to
+" always show a tselect list when there is more than one result, whereas I
+" want the default behaviour of - jump to the first result, if it looks wrong
+" I can tselect myself.
+set nocscopetag
+
+syntax on
+
+if !exists('$TMUX')
+    set clipboard=unnamed
+endif
+
+set autoindent " Auto-indent
+set expandtab " Expand tabs to spaces
+set tabstop=2
+set shiftwidth=2
+"set number " Line numbers on
+set backspace=indent,eol,start " Backspace over everything
+set isk+=$,@,%,# " these aren't word dividers
+set showcmd " show current command in status bar
+set hidden " Allow hidden buffers
+set laststatus=2
+set ttimeoutlen=0 timeoutlen=1000
+"set relativenumber
+
+set mouse=a
+
+set showmode " Show modeline in status
+set colorcolumn=81
+
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+
+set tags+=.git/tags
+
+set scrolloff=5
+
+set encoding=utf-8
+set fileencoding=utf-8
+
+set wildmode=longest:list,full
+set wildignore+=*.o,*.pyc,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*,bundle,
+      \_html,env,tmp,node_modules,public/uploads,public/assets/source_maps,
+      \public
+set suffixesadd=.rb
+
+set nobackup
+set nowb
+set noswapfile
+
+set lispwords+=module,describe,it,define-system
+
+let g:netrw_bufsettings="noma nomod nonu nobl nowrap ro rnu"
+
+function! MakeDirectory()
+  call system('mkdir -p ' . expand('%:p:h') )
+  if v:shell_error != 0
+    echo "Make Directory did not return successfully"
+  endif
+  :w
+endfunction
+
+autocmd VimEnter                    * set vb t_vb=
+autocmd BufRead,BufNewFile Makefile * set noet
+
+augroup RubyShenanigans
+  au!
+  autocmd BufRead /home/mattvh/git/ruby/*.c   setlocal cinoptions=:2,=2,l1
+  autocmd BufRead,BufNewFile Gemfile,Rakefile,Capfile,*.rake
+        \ set filetype=ruby
+  autocmd BufRead,BufNewFile *.rb
+        \ hi def Tab ctermbg=red guibg=red |
+        \ hi def TrailingWS ctermbg=red guibg=red |
+        \ hi rubyStringDelimiter ctermbg=NONE |
+        \ map <C-s> :!ruby -cw %<cr> |
+        \ map <F8> :!ruby-tags
+augroup END
+let g:ruby_indent_assignment_style = 'variable'
+
+augroup PythonShenanigans
+  au!
+  autocmd BufRead,BufNewFile *.py,*.pyw
+    \ set filetype=python |
+    \ set tabstop=4 shiftwidth=4 smarttab expandtab |
+    \ nnoremap ;t :w\|:!nosetests %<cr>
+augroup END
+
+let g:cpp_attributes_highlight = 1
+let g:cpp_member_highlight = 1
+
+augroup CShenanigans
+  au!
+  autocmd BufRead,BufNewFile *.c,*.h
+        \ set filetype=c |
+        \ set tabstop=8 shiftwidth=4 smarttab expandtab |
+  autocmd BufRead *.c   setlocal cinoptions=l1
+  autocmd BufRead */ruby/*.c   setlocal cinoptions=:2,=2,l1
+augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Keyboard Mapping
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let mapleader="\<Space>"
+
+" Beginning and end of line
+nnoremap <C-a> ^
+nnoremap <C-e> $
+
+" Window switching shortcuts
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+nnoremap <CR> :noh<CR><CR>
+
+" Command-][ to increase/decrease indentation
+vmap <D-]> >gv
+vmap <D-[> <gv
+
+" Hightlight literal Tabs
+noremap <leader>w :ToggleSpaceHi<cr>
+
+function! DoneTagging(channel)
+  echo "Done tagging"
+endfunction
+
+function! Taggit()
+    let job = job_start("ctags --tag-relative=yes --extras=+f -Rf.git/tags --languages=-javascript,sql,TypeScript --exclude=.ext --exclude=rb_mjit_header.h .", { 'close_cb': 'DoneTagging'})
+endfunction
+
+" Tags
+map <Leader>rt :call Taggit()<cr>
+
+" Use fzf
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>o :Buffers<CR>
+nnoremap <leader>l :Lines<CR>
+nnoremap <leader>T :Tags<CR>
+nnoremap <leader>t :BTags<CR>
+
+let g:fern#renderer = "nerdfont"
+nnoremap <leader>n :Fern . -drawer -toggle -reveal=%<CR>
+nnoremap <leader>s :TagbarToggle<CR>
+
+" building Ruby
+nnoremap <leader>m :make miniruby<cr>
+nnoremap <leader>M :make<cr>

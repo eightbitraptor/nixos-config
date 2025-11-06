@@ -1,0 +1,73 @@
+# Nix build results
+result
+result-*
+
+# Nix temporary files
+*.swp
+.*.swp
+.*.swo
+*~
+
+# direnv
+.direnv
+.envrc.local
+
+# Editor directories
+.vscode/
+.idea/
+*.iml
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Secrets (never commit these!)
+*.key
+*.pem
+*.crt
+*.age
+secrets/
+.secrets/
+
+# Local configuration overrides
+local.nix
+*.local.nix
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Nix REPL history
+.nix-repl-history
+
+# Python
+__pycache__/
+*.pyc
+.python-version
+
+# Ruby
+.ruby-version
+.rvmrc
+
+# Node
+node_modules/
+npm-debug.log
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Log files
+*.log
+logs/
+
+# Cache directories
+.cache/
+cache/
+
+# Build artifacts
+*.tar.gz
+*.tar.xz
+*.iso
