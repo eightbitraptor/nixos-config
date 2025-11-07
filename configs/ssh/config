@@ -1,0 +1,18 @@
+# SSH client configuration
+
+# Global settings
+Host *
+  AddKeysToAgent yes
+  ForwardAgent yes
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+
+# Example host configuration (customize as needed)
+# Host myserver
+#   HostName server.example.com
+#   User myuser
+#   Port 22
+#   IdentityFile ~/.ssh/specific_key

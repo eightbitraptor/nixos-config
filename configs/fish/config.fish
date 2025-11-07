@@ -24,11 +24,13 @@ if test -f /opt/homebrew/bin/brew
   /opt/homebrew/bin/brew shellenv | source
 end
 
-chruby 3.4.4
-
 if test -f /opt/dev/dev.fish
   source /opt/dev/dev.fish
 end
 
 #status --is-interactive; and ~/.rbenv/bin/rbenv init - fish | source
 alias claude="/Users/mattvh/.claude/local/claude"
+
+# FZF Configuration
+set -x FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git"
+set -x FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border --inline-info --color=dark --color=fg:-1,bg:-1,hl:#5fff87,fg+:-1,bg+:-1,hl+:#ffaf5f --color=info:#af87ff,prompt:#5fff87,pointer:#ff87d7,marker:#ff87d7,spinner:#ff87d7"

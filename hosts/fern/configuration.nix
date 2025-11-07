@@ -145,7 +145,6 @@
     ripgrep
     fd
     bat
-    # direnv - configured via home-manager
 
     lm_sensors
     acpi
@@ -165,6 +164,8 @@
     python3
     python3Packages.pip
     pipx
+
+    firefox
   ];
 
   fonts = {

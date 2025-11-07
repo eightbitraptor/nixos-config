@@ -1,0 +1,17 @@
+# Bat configuration
+# See: https://github.com/sharkdp/bat
+
+# Theme
+--theme="TwoDark"
+
+# Always use italics
+--italic-text=always
+
+# Style elements to display
+--style="numbers,changes,header"
+
+# Pager (uses less by default)
+# --pager="less -RF"
+
+# Map file extensions to language syntax
+# --map-syntax='*.conf:INI'
