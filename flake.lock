@@ -116,15 +116,16 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1762447578,
-        "narHash": "sha256-I2DWytfdfk10hITAR1nE/fDW26XXySbN5ov+fmAtviY=",
+        "lastModified": 1751070411,
+        "narHash": "sha256-TZNN5pQhH/10DfntCfGHL1kuAceLMYbxwa4RFq7OmrQ=",
         "owner": "WillPower3309",
         "repo": "swayfx",
-        "rev": "7ccc97be0ffd365c1168dccaddb6e0ad85c9fdb6",
+        "rev": "660c1197b6626326ce35a0241a6a00e80dddcbd6",
         "type": "github"
       },
       "original": {
         "owner": "WillPower3309",
+        "ref": "0.5.3",
         "repo": "swayfx",
         "type": "github"
       }

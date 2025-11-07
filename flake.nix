@@ -12,7 +12,7 @@
     };
 
     swayfx = {
-      url = "github:WillPower3309/swayfx";
+      url = "github:WillPower3309/swayfx/0.5.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
