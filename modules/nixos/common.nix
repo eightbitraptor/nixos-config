@@ -123,9 +123,7 @@
   };
 
   # Sound (PipeWire by default)
-  sound.enable = lib.mkDefault true;
-  hardware.pulseaudio.enable = lib.mkDefault false;
-
+  # Note: sound.enable has been deprecated in NixOS
   services.pipewire = {
     enable = lib.mkDefault true;
     alsa.enable = lib.mkDefault true;

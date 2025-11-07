@@ -4,34 +4,18 @@
   imports = [ ];
 
   networking.hostName = "fern";
-  time.timeZone = "Europe/London";
-
-  i18n.defaultLocale = "en_GB.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_GB.UTF-8";
-    LC_IDENTIFICATION = "en_GB.UTF-8";
-    LC_MEASUREMENT = "en_GB.UTF-8";
-    LC_MONETARY = "en_GB.UTF-8";
-    LC_NAME = "en_GB.UTF-8";
-    LC_NUMERIC = "en_GB.UTF-8";
-    LC_PAPER = "en_GB.UTF-8";
-    LC_TELEPHONE = "en_GB.UTF-8";
-    LC_TIME = "en_GB.UTF-8";
-  };
+  # Time zone and locale settings inherited from modules/nixos/common.nix
 
   console = {
     useXkbConfig = true;
   };
 
   nix = {
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      auto-optimise-store = true;
-    };
+    # Basic settings inherited from modules/nixos/common.nix
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 7d";
+      options = "--delete-older-than 7d";  # Override common.nix's 30d default
     };
   };
 
@@ -70,17 +54,10 @@
   programs.fish.enable = true;  # System-wide fish support
   environment.shells = [ pkgs.fish ];
 
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-  };
+  # PipeWire base configuration inherited from modules/nixos/common.nix
+  services.pipewire.wireplumber.enable = true;  # Additional for desktop
 
-  hardware.pulseaudio.enable = false;
-
-  security.polkit.enable = true;
+  # Polkit enabled in modules/nixos/common.nix
 
   programs.sway = {
     enable = true;
@@ -124,35 +101,30 @@
   };
 
   environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    git
-    htop
-    btop
-    tree
-    file
-    unzip
-    zip
+    # Base packages inherited from modules/nixos/common.nix:
+    # vim, wget, curl, git, htop, tree, file, unzip, zip, gnumake, tmux
 
-    gnumake
+    # Desktop-specific packages
+    btop  # Enhanced htop for desktop use
     pkg-config
     openssl
 
-    kitty
-    tmux
+    kitty  # Terminal emulator
     fzf
     ripgrep
     fd
     bat
 
+    # Hardware monitoring
     lm_sensors
     acpi
     powertop
 
+    # Media tools
     imagemagick
     ffmpeg
 
+    # Fonts (also specified in fonts.packages below)
     pkgs.jetbrains-mono
     (pkgs.nerd-fonts.jetbrains-mono)
     pkgs.noto-fonts
@@ -161,10 +133,12 @@
     pkgs.font-awesome
     pkgs.cascadia-code
 
+    # Development
     python3
     python3Packages.pip
     pipx
 
+    # Browser
     firefox
   ];
 

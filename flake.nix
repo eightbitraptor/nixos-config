@@ -39,6 +39,7 @@
           modules = [
             ./hosts/fern/hardware.nix
             nixos-hardware.nixosModules.lenovo-thinkpad-x1-6th-gen
+            ./modules/nixos/common.nix
             ./hosts/fern/configuration.nix
             home-manager.nixosModules.home-manager
             {
