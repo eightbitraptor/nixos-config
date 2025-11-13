@@ -79,7 +79,7 @@
       "warning": 15,
       "critical": 10
     },
-    "exec": "~/.config/waybar/modules/battery.py BAT0",
+    "exec": "waybar-battery BAT0",
     "return-type": "json",
     "format": "{} {percentage}% {icon}",
     "format-icons": ["", "", "", "", ""],

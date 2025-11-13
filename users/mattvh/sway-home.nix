@@ -1,18 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  # Install sway and waybar packages
+  # Install user-specific theming tools
+  # Core sway packages are now in system configuration
   home.packages = with pkgs; [
-    swayfx
-    waybar
-    fuzzel
-    grim
-    slurp
-    wl-clipboard
-    swaylock
-    swayidle
-    light
-    pywal
+    pywal  # User theming tool
   ];
 
   # Link the sway config directly
@@ -22,8 +14,5 @@
   xdg.configFile."waybar/config".source = ../../configs/waybar/config;
   xdg.configFile."waybar/style.css".source = ../../configs/waybar/style.css;
 
-  # Ensure XDG runtime directory is set for Wayland
-  systemd.user.sessionVariables = {
-    WAYLAND_DISPLAY = "wayland-1";
-  };
+  # Battery script is now provided by system package 'waybar-battery'
 }

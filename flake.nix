@@ -10,14 +10,9 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    swayfx = {
-      url = "github:WillPower3309/swayfx/0.5.3";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, swayfx, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
 
@@ -26,9 +21,7 @@
         config = {
           allowUnfree = true;
         };
-        overlays = [
-          (import ./overlays/swayfx.nix { inherit swayfx; })
-        ];
+        overlays = [];
       };
     in
     {

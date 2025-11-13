@@ -2,7 +2,7 @@
 
 include /etc/sway/config.d/*
 
-exec --no-startup-id wal -i /usr/share/backgrounds/senjougahara.jpg
+exec --no-startup-id wal -i ~/Pictures/wallpapers/senjougahara.jpg
 exec --no-startup-id dbus-update-activation-environment --all
 
 set $mod Mod4
@@ -30,7 +30,7 @@ input type:touchpad {
     middle_emulation enabled
 }
 
-output eDP-1 pos 0 0 scale 1 bg /usr/share/backgrounds/fern.jpg fill
+output eDP-1 pos 0 0 scale 1 bg ~/Pictures/wallpapers/fern.jpg fill
 
 output * adaptive_sync on
 
@@ -65,7 +65,7 @@ bindsym Menu+Right exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym Menu+Up    exec light -T 1.4
 bindsym Menu+Down  exec light -T 0.72
 
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 bindsym $mod+q kill
 
 bindsym $mod+d exec fuzzel
