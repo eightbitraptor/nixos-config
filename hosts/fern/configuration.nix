@@ -353,15 +353,12 @@ EOF
     };
   };
 
-  # Copy wallpaper to system location for greeter access
-  environment.etc."backgrounds/fern.jpg".source = /home/mattvh/Pictures/wallpapers/fern.jpg;
-
   # ReGreet configuration for modern Wayland-native greeter
   programs.regreet = {
     enable = true;
     settings = {
       background = {
-        path = "/etc/backgrounds/fern.jpg";
+        path = "/usr/share/backgrounds/fern.jpg";
         fit = "Cover";
       };
       GTK = {
