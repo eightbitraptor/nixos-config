@@ -3,6 +3,34 @@
 {
   imports = [ ];
 
+  # Performance optimization overlay for frequently used programs
+  nixpkgs.overlays = [
+    (final: prev: {
+      # Optimize terminal emulator with Skylake-specific instructions
+      kitty = prev.kitty.overrideAttrs (old: {
+        NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -O3 -march=skylake -mtune=skylake";
+      });
+
+      # Optimize compositor for smooth performance
+      swayfx = prev.swayfx.overrideAttrs (old: {
+        NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -O3 -march=skylake -mtune=skylake";
+      });
+
+      # Optimize frequently used CLI tools
+      ripgrep = prev.ripgrep.overrideAttrs (old: {
+        RUSTFLAGS = (old.RUSTFLAGS or "") + " -C target-cpu=skylake -C opt-level=3";
+      });
+
+      fd = prev.fd.overrideAttrs (old: {
+        RUSTFLAGS = (old.RUSTFLAGS or "") + " -C target-cpu=skylake -C opt-level=3";
+      });
+
+      bat = prev.bat.overrideAttrs (old: {
+        RUSTFLAGS = (old.RUSTFLAGS or "") + " -C target-cpu=skylake -C opt-level=3";
+      });
+    })
+  ];
+
   networking.hostName = "fern";
   # Time zone and locale settings inherited from modules/nixos/common.nix
 
@@ -40,6 +68,9 @@
   };
 
   networking.networkmanager.enable = true;
+
+  # Disable network-online blocking for faster boot
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -91,6 +122,11 @@
       light
     ];
     extraSessionCommands = ''
+      # Initialize DBus first to prevent startup delays
+      systemctl --user import-environment
+      dbus-update-activation-environment --systemd --all
+
+      # Wayland environment variables
       export SDL_VIDEODRIVER=wayland
       export QT_QPA_PLATFORM=wayland
       export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
@@ -342,6 +378,10 @@ EOF
         monospace = [ "JetBrains Mono" ];
         emoji = [ "Noto Color Emoji" ];
       };
+      # Optimize font cache for faster startup
+      cache32Bit = true;
+      allowBitmaps = false;
+      useEmbeddedBitmaps = false;
     };
   };
 
