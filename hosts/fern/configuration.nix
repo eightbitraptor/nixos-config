@@ -19,9 +19,24 @@
     };
   };
 
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+      timeout = 0;  # Hide boot menu unless key is pressed
+    };
+
+    # Silent boot configuration for clean boot experience
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+
+    kernelParams = [
+      "quiet"
+      "loglevel=3"
+      "systemd.show_status=auto"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
   };
 
   networking.networkmanager.enable = true;
