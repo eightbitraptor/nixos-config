@@ -82,6 +82,19 @@
     options = "ctrl:nocaps";
   };
 
+  # Japanese Input Method Editor (IME) configuration
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5 = {
+      addons = with pkgs; [
+        fcitx5-mozc           # Japanese input using Google's Mozc engine
+        fcitx5-gtk            # GTK integration
+        qt6Packages.fcitx5-configtool     # GUI configuration tool
+      ];
+      waylandFrontend = true;  # Better Wayland support
+    };
+  };
+
   users.users.mattvh = {
     isNormalUser = true;
     description = "Matt Valentine-House";
@@ -134,6 +147,13 @@
       export MOZ_ENABLE_WAYLAND=1
       export XDG_SESSION_TYPE=wayland
       export XDG_CURRENT_DESKTOP=sway
+
+      # Input Method Editor (IME) environment variables for fcitx5
+      export GTK_IM_MODULE=fcitx
+      export QT_IM_MODULE=fcitx
+      export XMODIFIERS=@im=fcitx
+      export INPUT_METHOD=fcitx
+      export GLFW_IM_MODULE=ibus  # Some apps work better with ibus module
     '';
   };
 

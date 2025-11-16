@@ -5,7 +5,7 @@
   "spacing": 10,
   "modules-left": ["sway/workspaces", "sway/mode"],
   "modules-center": ["clock", "custom/weather"],
-  "modules-right": ["pulseaudio", "tray"],
+  "modules-right": ["custom/keyboard", "pulseaudio", "tray"],
   
   "sway/mode": {
     "format": "<span style=\"italic\">{}</span>"
@@ -134,5 +134,13 @@
     "on-click-right": "kitty -e bash -ci ~/bin/wttr"
   },
   
+  "custom/keyboard": {
+    "exec": "fcitx5-remote -n 2>/dev/null | sed 's/mozc/日本語/' | sed 's/keyboard-gb/EN/'",
+    "interval": 1,
+    "format": "⌨ {}",
+    "tooltip": false,
+    "on-click": "fcitx5-remote -t"
+  },
+
   "tray": {}
 }

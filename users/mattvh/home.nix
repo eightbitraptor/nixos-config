@@ -247,6 +247,10 @@ in
         executable = true;
       };
 
+      # Fcitx5 IME configuration
+      "fcitx5/profile".source = ../../configs/fcitx5/profile;
+      "fcitx5/config".source = ../../configs/fcitx5/config;
+
       # Bat configuration
       "bat/config".source = ../../configs/bat/config;
     };

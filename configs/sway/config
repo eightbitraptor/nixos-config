@@ -4,6 +4,7 @@ include /etc/sway/config.d/*
 
 exec --no-startup-id wal -i ~/Pictures/wallpapers/senjougahara.jpg
 exec --no-startup-id dbus-update-activation-environment --all
+exec --no-startup-id fcitx5 -d
 
 set $mod Mod4
 floating_modifier $mod
@@ -69,6 +70,9 @@ bindsym $mod+Return exec kitty
 bindsym $mod+q kill
 
 bindsym $mod+d exec fuzzel
+
+# Toggle Japanese Input Method (IME)
+bindsym Control+space exec fcitx5-remote -t
 
 bindsym $mod+h focus left
 bindsym $mod+j focus down
