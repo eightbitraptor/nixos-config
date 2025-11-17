@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   # Template substitutions for files that need Nix paths
@@ -14,6 +14,7 @@ in
   imports = [
     ./sway-home.nix
     ./mpd-config.nix
+    inputs.nix-flatpak.homeManagerModules.nix-flatpak
   ];
 
   home.username = "mattvh";
@@ -280,4 +281,57 @@ in
   # FZF is configured through shell config files
 
   # Bat is configured through config file
+
+  # Flatpak configuration via nix-flatpak
+  services.flatpak = {
+    enable = true;
+
+    # Configure Flathub remote
+    remotes = [{
+      name = "flathub";
+      location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+    }];
+
+    # Update flatpaks automatically
+    update.auto = {
+      enable = true;
+      onCalendar = "weekly";
+    };
+
+    # Declaratively manage flatpak packages
+    # You can add packages here as needed, e.g.:
+    # packages = [
+    #   "com.spotify.Client"
+    #   "org.mozilla.firefox"
+    #   "com.discordapp.Discord"
+    # ];
+    packages = [];
+
+    # Global overrides for all flatpak apps
+    overrides = {
+      global = {
+        # Grant access to system fonts and icons
+        Context.filesystems = [
+          "/nix/store:ro"  # Access to nix store for fonts
+          "xdg-data/fonts:ro"  # User fonts
+          "xdg-data/icons:ro"  # User icons
+          "/run/current-system/sw/share/fonts:ro"  # System fonts
+          "/run/current-system/sw/share/icons:ro"  # System icons
+        ];
+
+        # Environment variables for theme consistency
+        Environment = {
+          # Use system GTK theme
+          GTK_THEME = "Adwaita-dark";
+        };
+      };
+    };
+  };
+
+  # Configure XDG_DATA_DIRS for Greetd/Sway integration
+  # This ensures flatpak desktop entries appear in fuzzel
+  home.file.".profile".text = ''
+    # Flatpak integration for desktop entries
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
+  '';
 }

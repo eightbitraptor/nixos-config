@@ -161,6 +161,9 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
+  # Enable Flatpak
+  services.flatpak.enable = true;
+
   virtualisation = {
     podman = {
       enable = true;

@@ -10,9 +10,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, nix-flatpak, ... }@inputs:
     let
       system = "x86_64-linux";
 
@@ -39,6 +41,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.mattvh = import ./users/mattvh/home.nix;
+              home-manager.extraSpecialArgs = { inherit inputs; };
             }
           ];
 
