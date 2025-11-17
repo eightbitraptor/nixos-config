@@ -110,8 +110,8 @@
       "default": ["", "", ""]
     },
     "on-click-right": "pavucontrol",
-    "on-click-middle": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
-    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    "on-click-middle": "swayosd-client --input-volume mute-toggle",
+    "on-click": "swayosd-client --output-volume mute-toggle"
   },
   
   "bluetooth": {

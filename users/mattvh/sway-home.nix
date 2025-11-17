@@ -7,6 +7,12 @@
     pywal  # User theming tool
   ];
 
+  # SwayOSD service for volume/brightness OSD
+  services.swayosd = {
+    enable = true;
+    package = pkgs.swayosd;
+  };
+
   # Link the sway config directly
   xdg.configFile."sway/config".source = ../../configs/sway/config;
 

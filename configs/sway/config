@@ -61,10 +61,10 @@ default_dim_inactive 0.25
 
 focus_follows_mouse no
 
-bindsym Menu+Left  exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym Menu+Right exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym Menu+Up    exec light -T 1.4
-bindsym Menu+Down  exec light -T 0.72
+bindsym Menu+Left  exec swayosd-client --output-volume lower
+bindsym Menu+Right exec swayosd-client --output-volume raise
+bindsym Menu+Up    exec swayosd-client --brightness raise
+bindsym Menu+Down  exec swayosd-client --brightness lower
 
 bindsym $mod+Return exec kitty
 bindsym $mod+q kill
@@ -148,16 +148,24 @@ bindsym $mod+Shift+0 move container to workspace $workspace10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-# Pulse Audio Controls {{{
-bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute   0 toggle
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+# Media Keys with SwayOSD {{{
+# Volume controls
+bindsym XF86AudioMute        exec swayosd-client --output-volume mute-toggle
+bindsym XF86AudioLowerVolume exec swayosd-client --output-volume lower
+bindsym XF86AudioRaiseVolume exec swayosd-client --output-volume raise
+
+# Brightness controls
+bindsym XF86MonBrightnessDown exec swayosd-client --brightness lower
+bindsym XF86MonBrightnessUp   exec swayosd-client --brightness raise
+
+# Microphone control
+bindsym XF86AudioMicMute exec swayosd-client --input-volume mute-toggle
 
 set $mode_volume Volume (d) down, (u) up, (m) toggle mute, (p) pavucontrol
 mode "$mode_volume" {
-    bindsym d exec --no-startup-id pactl set-sink-volume 0 -5%
-    bindsym u exec --no-startup-id pactl set-sink-volume 0 +5%
-    bindsym m exec --no-startup-id pactl set-sink-mute   0 toggle, mode "default"
+    bindsym d exec swayosd-client --output-volume lower
+    bindsym u exec swayosd-client --output-volume raise
+    bindsym m exec swayosd-client --output-volume mute-toggle, mode "default"
     bindsym p exec --no-startup-id pavucontrol, mode "default"
 
     # back to normal: Enter or Escape

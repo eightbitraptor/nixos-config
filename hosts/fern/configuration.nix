@@ -129,10 +129,8 @@
       grim
       slurp
       wl-clipboard
-      mako
       fuzzel
       waybar
-      light
     ];
     extraSessionCommands = ''
       # Initialize DBus first to prevent startup delays
