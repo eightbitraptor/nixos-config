@@ -11,7 +11,10 @@ let
   };
 in
 {
-  imports = [ ./sway-home.nix ];
+  imports = [
+    ./sway-home.nix
+    ./mpd-config.nix
+  ];
 
   home.username = "mattvh";
   home.homeDirectory = "/home/mattvh";
